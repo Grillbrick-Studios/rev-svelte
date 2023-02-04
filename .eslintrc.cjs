@@ -16,5 +16,10 @@ module.exports = {
 		browser: true,
 		es2017: true,
 		node: true
+	},
+	rules: {
+		semi: ['error', 'always'],
+		quotes: ['error', 'single'],
+		'comma-dangle': ['error', 'always-multiline']
 	}
 };
