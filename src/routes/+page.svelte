@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { Replicache } from 'replicache';
-	import type { Message } from './api/replicache-pull/+server';
+	import { nanoid } from 'nanoid';
+	import { Replicache, type WriteTransaction } from 'replicache';
 
 	const rep = browser
 		? new Replicache({
@@ -9,9 +9,21 @@
 				licenseKey: 'l937417d281654551a7bb39d0dbc48ebe',
 				pushURL: '/api/replicache-push',
 				pullURL: '/api/replicache-pull',
+				mutators: {
+					async createMessage(
+						tx: WriteTransaction,
+						{ id, from, content, order }: Message,
+					) {
+						await tx.put(`message/${id}`, {
+							from,
+							content,
+							order,
+						});
+					},
+				},
 		  })
 		: null;
-	let messages: { [key: string]: Message } = {};
+	let messages: [string, Message][] = [];
 
 	if (rep) {
 		listen(rep);
@@ -26,16 +38,29 @@
 			},
 			{
 				onData(result) {
+					messages = [];
 					for (const [key, value] of result) {
-						messages[key] = value;
+						messages.push([key, value]);
 					}
 				},
 			},
 		);
 	}
 
+	let usernameRef: HTMLInputElement;
+	let contentRef: HTMLInputElement;
+
 	function onSubmit() {
-		// TODO: Create message
+		const last =
+			messages.length > 0 ? messages[messages.length - 1][1] : undefined;
+		const order = (last?.order ?? 0) + 1;
+		rep?.mutate.createMessage({
+			id: nanoid(),
+			from: usernameRef.value,
+			content: contentRef.value,
+			order,
+		});
+		contentRef.value = '';
 	}
 
 	function listen(rep: Replicache) {
@@ -45,11 +70,11 @@
 
 <div class="container">
 	<form on:submit|preventDefault={() => onSubmit()} class="form">
-		<input type="text" class="username" required />
-		<input type="text" class="content" required />
+		<input type="text" class="username" bind:this={usernameRef} required />
+		<input type="text" class="content" bind:this={contentRef} required />
 		<input type="submit" />
 	</form>
-	{#each Object.entries(messages) as [k, v] (k)}
+	{#each messages as [k, v] (k)}
 		<div>
 			<b>{v.from}: </b>
 			{v.content}

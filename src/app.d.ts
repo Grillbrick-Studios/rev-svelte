@@ -7,6 +7,12 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
+	type Message = {
+		id?: string;
+		from: string;
+		content: string;
+		order: number;
+	};
 }
 
 export {};
