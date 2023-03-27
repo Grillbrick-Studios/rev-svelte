@@ -5,7 +5,7 @@ import type { PullRequest } from 'replicache';
 
 export const POST: RequestHandler = async ({ request: req }) => {
 	const pull = (await req.json()) as PullRequest;
-	console.log(`Processing pull`, JSON.stringify(pull));
+	// console.log(`Processing pull`, JSON.stringify(pull));
 	const t0 = Date.now();
 
 	try {

@@ -1,7 +1,4 @@
 import { REPLICHAT_DB_CONNECTION_STRING } from '$env/static/private';
-// import type { ITask } from 'pg-promise';
-// import pgInit from 'pg-promise';
-// import { default as pgInit, type ITask } from 'pg-promise';
 import pgInit, { type ITask } from 'pg-promise';
 import type { Mutation } from 'replicache';
 
@@ -43,7 +40,7 @@ export async function processMutation(
 	const lastMutationID = await getLastMutationID(t, clientID, false);
 	const nextMutationID = lastMutationID + 1;
 
-	console.log('nextVersion', nextVersion, 'nextMutationID', nextMutationID);
+	// console.log('nextVersion', nextVersion, 'nextMutationID', nextMutationID);
 
 	// It's common due to connectivity issues for clients to send a
 	// mutation which has already been processed. Skip these.
@@ -62,7 +59,7 @@ export async function processMutation(
 	}
 
 	if (error === undefined) {
-		console.log('Processing mutation:', JSON.stringify(mutation));
+		// console.log('Processing mutation:', JSON.stringify(mutation));
 
 		// For each possible mutation, run the server-side logic to apply the
 		// mutation.
@@ -83,7 +80,7 @@ export async function processMutation(
 		);
 	}
 
-	console.log('setting', clientID, 'last_mutation_id to', nextMutationID);
+	// console.log('setting', clientID, 'last_mutation_id to', nextMutationID);
 	// Update lastMutationID for requesting client.
 	await setLastMutationID(t, clientID, nextMutationID);
 
