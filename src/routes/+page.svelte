@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import {
+		PUBLIC_REPLICHAT_PUSHER_CLUSTER,
+		PUBLIC_REPLICHAT_PUSHER_KEY,
+	} from '$env/static/public';
 	import { nanoid } from 'nanoid';
+	import Pusher from 'pusher-js';
 	import { Replicache, type WriteTransaction } from 'replicache';
 
 	const rep = browser
@@ -64,7 +69,17 @@
 	}
 
 	function listen(rep: Replicache) {
-		// TODO: listen for changes on server
+		console.log('listening');
+		// Listen for pokes, and pull whenever we get one.
+		Pusher.logToConsole = true;
+		const pusher = new Pusher(PUBLIC_REPLICHAT_PUSHER_KEY, {
+			cluster: PUBLIC_REPLICHAT_PUSHER_CLUSTER,
+		});
+		const channel = pusher.subscribe('default');
+		channel.bind('poke', () => {
+			console.log('got poked');
+			rep.pull();
+		});
 	}
 </script>
 

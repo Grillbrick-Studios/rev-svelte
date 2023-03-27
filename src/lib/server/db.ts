@@ -1,5 +1,7 @@
-import { REPLICHAT_DB_CONNECTION_STRING } from '$env/static/private';
+import { REPLICHAT_DB_CONNECTION_STRING, REPLICHAT_PUSHER_APP_ID, REPLICHAT_PUSHER_SECRET } from '$env/static/private';
+import { PUBLIC_REPLICHAT_PUSHER_CLUSTER, PUBLIC_REPLICHAT_PUSHER_KEY } from '$env/static/public';
 import pgInit, { type ITask } from 'pg-promise';
+import Pusher from 'pusher';
 import type { Mutation } from 'replicache';
 
 const pgp = pgInit();
@@ -144,5 +146,14 @@ export async function createMessage(
 }
 
 export async function sendPoke() {
-	// TODO
+	const pusher = new Pusher({
+		appId: REPLICHAT_PUSHER_APP_ID,
+		key: PUBLIC_REPLICHAT_PUSHER_KEY,
+		secret: REPLICHAT_PUSHER_SECRET,
+		cluster: PUBLIC_REPLICHAT_PUSHER_CLUSTER,
+		useTLS: true,
+	});
+	const t0 = Date.now();
+	await pusher.trigger('default', 'poke', {});
+	console.log('Sent poke in', Date.now() - t0)
 }
