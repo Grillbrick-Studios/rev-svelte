@@ -4,7 +4,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import type { PushRequest } from 'replicache';
 
 export const POST: RequestHandler = async (event) => {
-	const push = event.request.body as unknown as PushRequest;
+	const push = (await event.request.json()) as PushRequest;
 	console.log('Processing push', JSON.stringify(push));
 
 	const t0 = Date.now();

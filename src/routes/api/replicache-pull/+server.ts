@@ -4,13 +4,13 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 import type { PullRequest } from 'replicache';
 
 export const POST: RequestHandler = async ({ request: req }) => {
-	const pull = req.body as unknown as PullRequest;
+	const pull = (await req.json()) as PullRequest;
 	console.log(`Processing pull`, JSON.stringify(pull));
 	const t0 = Date.now();
 
 	try {
 		// Read all data in a single transaction so it's consistent.
-		await tx(async (t) => {
+		return await tx(async (t) => {
 			// Get current version for space.
 			const version = (
 				await t.one('select version from space where key = $1', defaultSpaceID)
@@ -68,5 +68,4 @@ export const POST: RequestHandler = async ({ request: req }) => {
 	} finally {
 		console.log('Processed pull in', Date.now() - t0);
 	}
-	return new Response(null, { status: 500 });
 };

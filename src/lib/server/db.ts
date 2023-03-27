@@ -16,7 +16,7 @@ const SerializableMode = new pgp.txMode.TransactionMode({
 });
 
 // Helper to make sure we always access database at serializable level.
-export async function tx(f: (t: pgInit.ITask<unknown>) => unknown) {
+export async function tx<T>(f: (t: pgInit.ITask<unknown>) => T) {
 	return await db.tx(
 		{
 			mode: SerializableMode,
@@ -100,7 +100,7 @@ export async function getLastMutationID(
 	required: boolean,
 ) {
 	const clientRow = await t.oneOrNone(
-		`select last_mutation_id from replicache_client where id = ${clientID}`,
+		`select last_mutation_id from replicache_client where id = $1`,
 		clientID,
 	);
 	if (!clientRow) {
