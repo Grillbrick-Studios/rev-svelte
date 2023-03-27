@@ -1,38 +1,37 @@
-import { defaultSpaceID, tx } from '$lib/server/db';
+import { tx } from '$lib/server/db';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async () => {
 	await tx(async (t) => {
-		await t.none('drop table if exists replicache_client');
-		await t.none('drop table if exists message');
-		await t.none('drop table if exists space');
+		await t.none('drop table if exists roles');
+		await t.none('drop table if exists account_roles');
 
-		// We will store our chat messages within "spaces".
-		// Each space has a version that increments for each push processed.
-		// Note that in many applications there is already some domain object that
-		// already fills the role of a "space". In that case, that table can double
-		// as the space table.
-		await t.none(`create table space (
-        key text not null unique primary key,
-        version integer)`);
-		await t.none(
-			`insert into space (key, version) values ('${defaultSpaceID}', 0)`,
-		);
+		// First we create a table to hold roles like admins to give special
+		// permissions.
+		await t.none(`create table if not exists roles (
+			role_id serial primary key,
+			role_name varchar(255) unique not null)`);
 
-		// Stores chat messages.
-		await t.none(`create table message (
-      id text primary key not null,
-      space_id text not null references space(key),
-      sender varchar(255) not null,
-      content text not null,
-      ord integer not null,
-      deleted boolean not null,
-      version integer not null)`);
+		await t.none(`alter table roles
+			enable row level security
+		`)
 
-		// Stores last mutationID processed for each Replicache client.
-		await t.none(`create table replicache_client (
-      id varchar(36) primary key not null,
-      last_mutation_id integer not null)`);
+		// Now we add the default user and admin roles.
+
+		// Next we create the account_roles table that pairs the roles with user accounts
+		await t.none(`create table if not exists account_roles (
+			user_id uuid not null,
+			role_id int not null,
+			grant_date TIMESTAMP DEFAULT now(),
+			PRIMARY KEY (user_id, role_id),
+			FOREIGN KEY (role_id)
+				REFERENCES roles (role_id),
+			FOREIGN KEY (user_id)
+				REFERENCES auth.users (id))`);
+
+		await t.none(`alter table account_roles
+			enable row level security
+		`)
 	});
 	return new Response('ok');
 };
