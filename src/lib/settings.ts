@@ -14,14 +14,14 @@ export class ParagraphStyle {
 }
 
 export enum Font {
-	Merriweather,
-	TimesNewRoman,
-	Caladea,
-	IBMPlexSerif,
-	Arial,
-	Roboto,
-	Montserrat,
-	BalsamiqSans,
+	Merriweather = 'merriweather',
+	TimesNewRoman = 'times new roman',
+	Caladea = 'caladea',
+	IBMPlexSerif = 'ibm plex serif',
+	Arial = 'arial',
+	Roboto = 'roboto',
+	Montserrat = 'montserrat',
+	BalsamiqSans = 'balsamiq sans',
 }
 
 export enum CommentaryLinkStyle {
@@ -75,13 +75,15 @@ export const bibleViewColumns = writable<1 | 2 | 3 | 4 | 5>(1);
 
 export const differentBibleFont = writable(false);
 
-export const systemFont = writable(Font.Merriweather);
+export const fontFamily = writable(Font.Merriweather);
 
-// TODO find the defaults for these values
+// TODO find the defaults for fontSize and lineHeight
 
-export const fontSize = writable(12);
+// Increment by .1 em
+export const fontSize = writable(1.0);
 
-export const lineHeight = writable(1);
+// Increment by .1 em
+export const lineHeight = writable(1.3);
 
 export const commentaryLinkStyle = writable(
 	CommentaryLinkStyle.RedVerseNumberOnly,
