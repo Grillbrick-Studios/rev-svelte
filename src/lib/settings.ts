@@ -101,7 +101,7 @@ export const uppercaseOTQuotes = writable(false);
 
 export const animation = writable(true);
 
-export const colorTheme = writable(ColorTheme.Light);
+export const colorTheme = writable(ColorTheme.Dark);
 
 export const showExportIcons = writable(true);
 
