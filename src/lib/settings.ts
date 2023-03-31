@@ -1,16 +1,54 @@
 import { writable } from 'svelte/store';
 
+/// The keys for storing the values in local storage
+enum Keys {
+	bibleTextMode = 'bibleTextMode',
+	bibleTextOnly = 'bibleTextOnly',
+	oldEnglishOnFirstVerse = 'oldEnglishOnFirstVerse',
+	paragraphStyle = 'paragraphStyle',
+	bibleViewColumns = 'bibleViewColumns',
+	differentBibleFont = 'differentBibleFont',
+	fontFamily = 'fontFamily',
+	fontSize = 'fontSize',
+	lineHeight = 'lineHeight',
+	commentaryLinkStyle = 'commentaryLinkStyle',
+	strongsLexiconSite = 'strongsLexiconSite',
+	openCommentaryLinksInNewTab = 'openCommentaryLinksInNewTab',
+	chapterHeadingLinks = 'chapterHeadingLinks',
+	alwaysShowChapterHeadingLinks = 'alwaysShowChapterHeadingLinks',
+	uppercaseOTQuotes = 'uppercaseOTQuotes',
+	animation = 'animation',
+	colorTheme = 'colorTheme',
+	showExportIcons = 'showExportIcons',
+	exportFontSize = 'exportFontSize',
+	exportGutter = 'exportGutter',
+}
+
 /// Enums and Classes to be used in the settings
 
 export enum BibleTextMode {
-	VerseBreak,
-	Paragraph,
-	Reading,
+	VerseBreak = 'VerseBreak',
+	Paragraph = 'Paragraph',
+	Reading = 'Reading',
 }
 
 export class ParagraphStyle {
 	Indented = false;
 	Justified = false;
+
+	static fromString(value: string): ParagraphStyle {
+		const p = new ParagraphStyle();
+		p.Indented = value.includes('i');
+		p.Justified = value.includes('j');
+		return p;
+	}
+
+	toString(): string {
+		let result = '';
+		if (this.Indented) result += 'i';
+		if (this.Justified) result += 'j';
+		return result;
+	}
 }
 
 export enum Font {
@@ -25,10 +63,10 @@ export enum Font {
 }
 
 export enum CommentaryLinkStyle {
-	RedVerseNumberOnly,
-	YellowOnHover,
-	UnderlineOnHover,
-	YellowAndUnderlineOnHover,
+	RedVerseNumberOnly = 'RedVerseNumberOnly',
+	YellowOnHover = 'YellowOnHover',
+	UnderlineOnHover = 'UnderlineOnHover',
+	YellowAndUnderlineOnHover = 'YellowAndUnderlineOnHover',
 }
 
 export enum StrongsLexiconSite {
@@ -38,9 +76,9 @@ export enum StrongsLexiconSite {
 }
 
 export enum ChapterHeadingLinks {
-	ChapterLinks,
-	VerseLinks,
-	Both,
+	ChapterLinks = 'ChapterLinks',
+	VerseLinks = 'VerseLinks',
+	Both = 'Both',
 }
 
 export enum ColorTheme {
@@ -50,61 +88,176 @@ export enum ColorTheme {
 }
 
 export enum Sizes {
-	Small,
-	Medium,
-	Large,
+	Small = 'Small',
+	Medium = 'Medium',
+	Large = 'Large',
 }
 
 export enum GutterOptions {
-	None,
-	ForSingleSidedPrinting,
-	ForDoubleSidedPrinting,
+	None = 'None',
+	ForSingleSidedPrinting = 'ForSingleSidedPrinting',
+	ForDoubleSidedPrinting = 'ForDoubleSidedPrinting',
 }
 
-/// The actuall settings.
+/// The actual settings.
 
-export const bibleTextMode = writable(BibleTextMode.VerseBreak);
-
-export const BibleTextOnly = writable(false);
-
-export const oldEnglishOnFirstVerse = writable(false);
-
-export const paragraphStyle = writable(new ParagraphStyle());
-
-export const bibleViewColumns = writable<1 | 2 | 3 | 4 | 5>(1);
-
-export const differentBibleFont = writable(false);
-
-export const fontFamily = writable(Font.Merriweather);
-
-// TODO find the defaults for fontSize and lineHeight
-
-// Increment by .1 em
-export const fontSize = writable(1.0);
-
-// Increment by .1 em
-export const lineHeight = writable(1.3);
-
-export const commentaryLinkStyle = writable(
-	CommentaryLinkStyle.RedVerseNumberOnly,
+export const bibleTextMode = writable(
+	(localStorage.getItem(Keys.bibleTextMode) as BibleTextMode) ||
+		BibleTextMode.VerseBreak,
 );
 
-export const strongsLexiconSite = writable(StrongsLexiconSite.BlueLetterBible);
+bibleTextMode.subscribe((val) => localStorage.setItem(Keys.bibleTextMode, val));
 
-export const openCommentaryLinksInNewTab = writable(false);
+export const bibleTextOnly = writable(
+	localStorage.getItem(Keys.bibleTextOnly) == 'true',
+);
 
-export const chapterHeadingLinks = writable(ChapterHeadingLinks.VerseLinks);
+bibleTextOnly.subscribe((val) =>
+	localStorage.setItem(Keys.bibleTextOnly, val.toString()),
+);
 
-export const alwaysShowChapterHeadingLinks = writable(false);
+export const oldEnglishOnFirstVerse = writable(
+	localStorage.getItem(Keys.oldEnglishOnFirstVerse) === 'true',
+);
 
-export const uppercaseOTQuotes = writable(false);
+oldEnglishOnFirstVerse.subscribe((val) =>
+	localStorage.setItem(Keys.oldEnglishOnFirstVerse, val.toString()),
+);
 
-export const animation = writable(true);
+export const paragraphStyle = writable(
+	ParagraphStyle.fromString(localStorage.getItem(Keys.paragraphStyle) || ''),
+);
 
-export const colorTheme = writable(ColorTheme.Dark);
+paragraphStyle.subscribe((val) =>
+	localStorage.setItem(Keys.paragraphStyle, val.toString()),
+);
 
-export const showExportIcons = writable(true);
+const bvc_int = parseInt(localStorage.getItem(Keys.bibleViewColumns) || '1');
+type NumColumns = 1 | 2 | 3 | 4 | 5;
+export const bibleViewColumns = writable<NumColumns>(
+	bvc_int > 5 ? 5 : bvc_int < 1 ? 1 : (bvc_int as NumColumns),
+);
 
-export const exportFontSize = writable(Sizes.Medium);
+bibleViewColumns.subscribe((val) =>
+	localStorage.setItem(Keys.bibleViewColumns, val.toString()),
+);
 
-export const exportGutter = writable(GutterOptions.None);
+export const differentBibleFont = writable(
+	localStorage.getItem(Keys.differentBibleFont) === 'true',
+);
+
+differentBibleFont.subscribe((val) =>
+	localStorage.setItem(Keys.differentBibleFont, val.toString()),
+);
+
+export const fontFamily = writable(
+	(localStorage.getItem(Keys.fontFamily) as Font) || Font.Merriweather,
+);
+
+fontFamily.subscribe((val) => localStorage.setItem(Keys.fontFamily, val));
+
+// Increment by .1 em
+export const fontSize = writable(
+	parseFloat(localStorage.getItem(Keys.fontSize) || '1.0'),
+);
+
+fontSize.subscribe((val) =>
+	localStorage.setItem(Keys.fontSize, val.toString()),
+);
+
+// Increment by .1 em
+export const lineHeight = writable(
+	parseFloat(localStorage.getItem(Keys.lineHeight) || '1.3'),
+);
+
+lineHeight.subscribe((val) =>
+	localStorage.setItem(Keys.lineHeight, val.toString()),
+);
+
+export const commentaryLinkStyle = writable(
+	(localStorage.getItem(Keys.commentaryLinkStyle) as CommentaryLinkStyle) ||
+		CommentaryLinkStyle.RedVerseNumberOnly,
+);
+
+commentaryLinkStyle.subscribe((val) =>
+	localStorage.setItem(Keys.commentaryLinkStyle, val),
+);
+
+export const strongsLexiconSite = writable(
+	(localStorage.getItem(Keys.strongsLexiconSite) as StrongsLexiconSite) ||
+		StrongsLexiconSite.BlueLetterBible,
+);
+
+strongsLexiconSite.subscribe((val) =>
+	localStorage.setItem(Keys.strongsLexiconSite, val),
+);
+
+export const openCommentaryLinksInNewTab = writable(
+	localStorage.getItem(Keys.openCommentaryLinksInNewTab) === 'true',
+);
+
+openCommentaryLinksInNewTab.subscribe((val) =>
+	localStorage.setItem(Keys.openCommentaryLinksInNewTab, val.toString()),
+);
+
+export const chapterHeadingLinks = writable(
+	(localStorage.getItem(Keys.chapterHeadingLinks) as ChapterHeadingLinks) ||
+		ChapterHeadingLinks.VerseLinks,
+);
+
+chapterHeadingLinks.subscribe((val) =>
+	localStorage.setItem(Keys.chapterHeadingLinks, val),
+);
+
+export const alwaysShowChapterHeadingLinks = writable(
+	localStorage.getItem(Keys.alwaysShowChapterHeadingLinks) === 'true',
+);
+
+alwaysShowChapterHeadingLinks.subscribe((val) =>
+	localStorage.setItem(Keys.alwaysShowChapterHeadingLinks, val.toString()),
+);
+
+export const uppercaseOTQuotes = writable(
+	localStorage.getItem(Keys.uppercaseOTQuotes) !== 'false',
+);
+
+uppercaseOTQuotes.subscribe((val) =>
+	localStorage.setItem(Keys.uppercaseOTQuotes, val.toString()),
+);
+
+export const animation = writable(
+	localStorage.getItem(Keys.animation) !== 'false',
+);
+
+animation.subscribe((val) =>
+	localStorage.setItem(Keys.animation, val.toString()),
+);
+
+export const colorTheme = writable(
+	(localStorage.getItem(Keys.colorTheme) as ColorTheme) || ColorTheme.Dark,
+);
+
+colorTheme.subscribe((val) => localStorage.setItem(Keys.colorTheme, val));
+
+export const showExportIcons = writable(
+	localStorage.getItem(Keys.showExportIcons) !== 'false',
+);
+
+showExportIcons.subscribe((val) =>
+	localStorage.setItem(Keys.showExportIcons, val.toString()),
+);
+
+export const exportFontSize = writable(
+	(localStorage.getItem(Keys.exportFontSize) as Sizes) || Sizes.Medium,
+);
+
+exportFontSize.subscribe((val) =>
+	localStorage.setItem(Keys.exportFontSize, val),
+);
+
+export const exportGutter = writable(
+	(localStorage.getItem(Keys.exportGutter) as GutterOptions) ||
+		GutterOptions.None,
+);
+
+exportGutter.subscribe((val) => localStorage.setItem(Keys.exportGutter, val));
