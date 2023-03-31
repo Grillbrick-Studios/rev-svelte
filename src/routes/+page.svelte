@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { fontFamily, fontSize, lineHeight, type Font } from '$lib/settings';
 
 	const setFont = (f: Font) => ($fontFamily = f);
@@ -6,6 +7,9 @@
 	const decreaseFontSize = () => ($fontSize -= 0.1);
 	const increaseLineHeight = () => ($lineHeight += 0.1);
 	const decreaseLineHeight = () => ($lineHeight -= 0.1);
+
+	// DEBUGGING use the preferences page to set preferences.
+	goto('/preferences');
 </script>
 
 <p>

@@ -1,6 +1,9 @@
 <script lang="ts">
+	import blank from '$lib/assets/blank.png';
+	import historyImage from '$lib/assets/history_icon.png';
 	import menuIcon from '$lib/assets/menu_icon.png';
 	import { colorTheme } from '$lib/settings';
+	import SearchBar from './SearchBar.svelte';
 </script>
 
 <div id="header" class={$colorTheme}>
@@ -13,6 +16,21 @@
 					</a>
 					<span class="rev">REV<span class="bible">Bible</span></span></td
 				>
+				<td
+					style="width:80%;text-align:center;vertical-align:middle;white-space:nowrap"
+				>
+					<!-- Search Field -->
+					<SearchBar />
+				</td>
+				<td style="width:10%;text-align:right;white-space:nowrap;">
+					<img
+						src={blank}
+						alt="blank"
+						style="height:34px;vertical-align:middle;padding-right:30px;"
+					/>
+					<a href=""><img src={historyImage} alt="prefs" /></a>
+					<!-- History -->
+				</td>
 			</tr>
 		</tbody>
 	</table>
