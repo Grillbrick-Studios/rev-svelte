@@ -1,6 +1,13 @@
 <script lang="ts">
 	import moreInfo from '$lib/assets/moreinfo.png';
-	import { BibleTextMode, bibleTextMode } from '$lib/settings';
+	import {
+		BibleTextMode,
+		bibleTextMode,
+		bibleTextOnly,
+		oldEnglishOnFirstVerse,
+		OptionType,
+		paragraphStyle,
+	} from '$lib/settings';
 	import InfoBox from './InfoBox.svelte';
 </script>
 
@@ -20,46 +27,42 @@
 </p>
 
 <table style="width: 100%;">
-	<InfoBox>
-		<div slot="name">Bible Text Mode</div>
-		<table slot="options" cellspacing="0" cellpadding="0" border="0">
-			<tr>
-				<td>
-					<input
-						type="radio"
-						name={BibleTextMode.VerseBreak}
-						checked={$bibleTextMode === BibleTextMode.VerseBreak}
-						on:click={() => ($bibleTextMode = BibleTextMode.VerseBreak)}
-					/>
-				</td>
-				<td>Verse Break</td>
-			</tr>
-			<tr>
-				<td>
-					<input
-						type="radio"
-						name={BibleTextMode.Paragraph}
-						checked={$bibleTextMode === BibleTextMode.Paragraph}
-						on:click={() => ($bibleTextMode = BibleTextMode.Paragraph)}
-					/>
-				</td>
-				<td>Paragraph</td>
-			</tr>
-			<tr>
-				<td>
-					<input
-						type="radio"
-						name={BibleTextMode.Reading}
-						checked={$bibleTextMode === BibleTextMode.Reading}
-						on:click={() => ($bibleTextMode = BibleTextMode.Reading)}
-					/>
-				</td>
-				<td>Reading</td>
-			</tr>
-		</table>
+	<InfoBox
+		name="Bible Text Mode"
+		options={[
+			{
+				type: OptionType.Select,
+				name: 'Verse Break',
+				isChecked() {
+					return $bibleTextMode === BibleTextMode.VerseBreak;
+				},
+				onClick() {
+					$bibleTextMode = BibleTextMode.VerseBreak;
+				},
+			},
+			{
+				type: OptionType.Select,
+				name: 'Paragraph',
+				isChecked() {
+					return $bibleTextMode === BibleTextMode.Paragraph;
+				},
+				onClick() {
+					$bibleTextMode = BibleTextMode.Paragraph;
+				},
+			},
+			{
+				name: 'Reading',
+				type: OptionType.Select,
+				isChecked() {
+					return $bibleTextMode === BibleTextMode.Reading;
+				},
+				onClick() {
+					$bibleTextMode = BibleTextMode.Reading;
+				},
+			},
+		]}
+	>
 		<div
-			id="prefhelpdiv0"
-			slot="info"
 			style="display: inline-block; font-size: 90%; padding-bottom: 7px; overflow: hidden; height: 245px;"
 		>
 			<p class="style1">
@@ -80,6 +83,69 @@
 			</p>
 		</div>
 	</InfoBox>
+	<InfoBox
+		name="Bible Text Only"
+		options={{
+			type: OptionType.Boolean,
+			name: '',
+			isChecked: () => $bibleTextOnly,
+			onClick: () => ($bibleTextOnly = !$bibleTextOnly),
+		}}
+	>
+		<div
+			id="prefhelpdiv1"
+			style="display: inline-block; font-size: 90%; padding-bottom: 7px; overflow: hidden; height: 287px;"
+		>
+			<p class="style1">
+				Activating this feature removes all links to the REV commentary,
+				disables all MyREV functionality, and temporarily hides any markup
+				(i.e., highlighting) in the text. What you are left with is a clean
+				version of only the REV Bible text for ease of reading. All user notes
+				and highlights are saved and accessible again once this feature is
+				turned off.
+			</p>
+			<p class="style1">
+				The purpose for this setting is two-fold. 1) If you are on a mobile or
+				touchscreen device and just want to read the Bible, sometimes it's too
+				easy to inadvertently activate a link instead of scroll the screen. If
+				this setting is on, all links are deactivated so that cannot happen. 2)
+				If you are doing a presentation or teaching and have many verses
+				highlighted, your highlights may be distracting to your audience. This
+				setting will turn your highlights off.
+			</p>
+			<p class="style1">
+				If you are a MyREV user and this setting is on, your notes and
+				highlighted verses are still accessible on the MyREV page.
+			</p>
+		</div>
+	</InfoBox>
+	<InfoBox
+		name="Old English on First Verse"
+		options={{
+			type: OptionType.Boolean,
+			name: '',
+			isChecked: () => $oldEnglishOnFirstVerse,
+			onClick: () => ($oldEnglishOnFirstVerse = !$oldEnglishOnFirstVerse),
+		}}
+	/>
+	<InfoBox
+		name="Paragraph style"
+		multiselect
+		options={[
+			{
+				type: OptionType.Select,
+				name: 'Indented',
+				isChecked: () => $paragraphStyle.Indented,
+				onClick: () => ($paragraphStyle.Indented = !$paragraphStyle.Indented),
+			},
+			{
+				type: OptionType.Select,
+				name: 'Justified',
+				isChecked: () => $paragraphStyle.Justified,
+				onClick: () => ($paragraphStyle.Justified = !$paragraphStyle.Justified),
+			},
+		]}
+	/>
 </table>
 
 <style>
@@ -87,6 +153,7 @@
 		text-indent: 0;
 		text-align: left;
 		display: block;
+		width: 100%;
 		font-size: 90%;
 	}
 </style>

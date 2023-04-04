@@ -1,15 +1,68 @@
 <script lang="ts">
 	import moreInfo from '$lib/assets/moreinfo.png';
+	import type { OptionType } from '$lib/settings';
+
+	type Option = {
+		type: OptionType;
+		name: string;
+		isChecked: () => boolean;
+		onClick: () => void;
+	};
+
+	export let name: string;
+	export let options: Option[] | Option = [];
+	export let multiselect = false;
+	const selectType = multiselect ? 'checkbox' : 'radio';
 	let showInfo = false;
 </script>
 
 <tr>
 	<!-- The main Table data -->
 	<td class="name">
-		<slot name="name"><!-- optional fallback --></slot>
+		{name}
 	</td>
 	<td class="options">
-		<slot name="options"><!-- optional fallback --></slot>
+		<table cellspacing={0} cellpadding={0} border={0}>
+			{#if Array.isArray(options) && options.length > 1}
+				{#each options as option}
+					<tr>
+						<td>
+							<input
+								type={selectType}
+								name={option.name}
+								checked={option.isChecked()}
+								on:click={option.onClick}
+							/>
+						</td>
+						<td>{option.name}</td>
+					</tr>
+				{/each}
+			{:else if Array.isArray(options) && options.length === 1}
+				{@const option = options[0]}
+				<tr>
+					<td>
+						<input
+							type="checkbox"
+							name={option.name}
+							checked={option.isChecked()}
+							on:click={option.onClick}
+						/>
+					</td>
+				</tr>
+			{:else if !Array.isArray(options)}
+				{@const option = options}
+				<tr>
+					<td>
+						<input
+							type="checkbox"
+							name={option.name}
+							checked={option.isChecked()}
+							on:click={option.onClick}
+						/>
+					</td>
+				</tr>
+			{/if}
+		</table>
 	</td>
 	<td class="info-icon">
 		<input
@@ -24,12 +77,12 @@
 
 {#if showInfo}
 	<tr class="moreinfo">
-		<slot name="info"><!-- optional fallback --></slot>
+		<slot><!-- optional fallback --></slot>
 	</tr>
 {/if}
 
 <tr>
-	<td class="settd_spc" colspan="3" />
+	<td class="spacer" colspan="3" />
 </tr>
 
 <style>
@@ -53,7 +106,7 @@
 		vertical-align: top;
 	}
 
-	.settd_spc {
+	.spacer {
 		border-top: 1px dashed #aaaaaa;
 		height: 11px;
 	}
