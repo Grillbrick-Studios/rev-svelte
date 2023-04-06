@@ -1,3 +1,4 @@
 {
-	"cSpell.words": ["settd"]
+	"cSpell.words": ["settd"],
+	"typescript.tsdk": "node_modules\\typescript\\lib"
 }

@@ -33,9 +33,7 @@ export enum BibleTextMode {
 }
 
 export enum OptionType {
-	Select,
 	Dropdown,
-	Boolean,
 	RaiseLowerReset,
 	Button,
 }

@@ -6,6 +6,8 @@
 		fontSize,
 		lineHeight,
 	} from '$lib/settings';
+	import '../fonts.css';
+	import '../style.css';
 	import Header from './Header.svelte';
 
 	function setBodyClass(node: HTMLElement) {

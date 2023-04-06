@@ -5,7 +5,6 @@
 		bibleTextMode,
 		bibleTextOnly,
 		oldEnglishOnFirstVerse,
-		OptionType,
 		paragraphStyle,
 	} from '$lib/settings';
 	import InfoBox from './InfoBox.svelte';
@@ -31,32 +30,29 @@
 		name="Bible Text Mode"
 		options={[
 			{
-				type: OptionType.Select,
 				name: 'Verse Break',
 				isChecked() {
 					return $bibleTextMode === BibleTextMode.VerseBreak;
 				},
-				onClick() {
+				onSelect() {
 					$bibleTextMode = BibleTextMode.VerseBreak;
 				},
 			},
 			{
-				type: OptionType.Select,
 				name: 'Paragraph',
 				isChecked() {
 					return $bibleTextMode === BibleTextMode.Paragraph;
 				},
-				onClick() {
+				onSelect() {
 					$bibleTextMode = BibleTextMode.Paragraph;
 				},
 			},
 			{
 				name: 'Reading',
-				type: OptionType.Select,
 				isChecked() {
 					return $bibleTextMode === BibleTextMode.Reading;
 				},
-				onClick() {
+				onSelect() {
 					$bibleTextMode = BibleTextMode.Reading;
 				},
 			},
@@ -85,12 +81,18 @@
 	</InfoBox>
 	<InfoBox
 		name="Bible Text Only"
-		options={{
-			type: OptionType.Boolean,
-			name: '',
-			isChecked: () => $bibleTextOnly,
-			onClick: () => ($bibleTextOnly = !$bibleTextOnly),
-		}}
+		options={[
+			{
+				name: 'No',
+				isChecked: () => !$bibleTextOnly,
+				onSelect: () => ($bibleTextOnly = false),
+			},
+			{
+				name: 'Yes',
+				isChecked: () => $bibleTextOnly,
+				onSelect: () => ($bibleTextOnly = true),
+			},
+		]}
 	>
 		<div
 			id="prefhelpdiv1"
@@ -122,10 +124,9 @@
 	<InfoBox
 		name="Old English on First Verse"
 		options={{
-			type: OptionType.Boolean,
 			name: '',
 			isChecked: () => $oldEnglishOnFirstVerse,
-			onClick: () => ($oldEnglishOnFirstVerse = !$oldEnglishOnFirstVerse),
+			onSelect: () => ($oldEnglishOnFirstVerse = !$oldEnglishOnFirstVerse),
 		}}
 	/>
 	<InfoBox
@@ -133,16 +134,15 @@
 		multiselect
 		options={[
 			{
-				type: OptionType.Select,
 				name: 'Indented',
 				isChecked: () => $paragraphStyle.Indented,
-				onClick: () => ($paragraphStyle.Indented = !$paragraphStyle.Indented),
+				onSelect: () => ($paragraphStyle.Indented = !$paragraphStyle.Indented),
 			},
 			{
-				type: OptionType.Select,
 				name: 'Justified',
 				isChecked: () => $paragraphStyle.Justified,
-				onClick: () => ($paragraphStyle.Justified = !$paragraphStyle.Justified),
+				onSelect: () =>
+					($paragraphStyle.Justified = !$paragraphStyle.Justified),
 			},
 		]}
 	/>

@@ -1,54 +1,54 @@
 <script lang="ts">
 	import moreInfo from '$lib/assets/moreinfo.png';
-	import type { OptionType } from '$lib/settings';
+	import { OptionType } from '$lib/settings';
 
-	type Option = {
-		type: OptionType;
+	type Option<T> = {
 		name: string;
-		isChecked: () => boolean;
-		onClick: () => void;
+		value?: T;
+		isChecked?: () => boolean;
+		onSelect: (value: T) => void;
 	};
 
+	export let optionType: OptionType | null = null;
+
 	export let name: string;
-	export let options: Option[] | Option = [];
+	export let options: Option<unknown>[] | Option<unknown> = [];
 	export let multiselect = false;
-	const selectType = multiselect ? 'checkbox' : 'radio';
+	const selectType =
+		multiselect || (Array.isArray(options) && options.length === 1)
+			? 'checkbox'
+			: 'radio';
 	let showInfo = false;
 </script>
 
-<tr>
+<tr class="settr">
 	<!-- The main Table data -->
-	<td class="name">
+	<td class="settd1">
 		{name}
 	</td>
-	<td class="options">
+	<td class="settd3">
 		<table cellspacing={0} cellpadding={0} border={0}>
-			{#if Array.isArray(options) && options.length > 1}
+			{#if optionType === OptionType.Button}
+				<!-- content here -->
+			{:else if optionType === OptionType.Dropdown}
+				<!-- else if content here -->
+			{:else if optionType === OptionType.RaiseLowerReset}
+				<!-- else if content here -->
+			{:else if Array.isArray(options) && options.length > 1}
 				{#each options as option}
 					<tr>
 						<td>
 							<input
 								type={selectType}
 								name={option.name}
-								checked={option.isChecked()}
-								on:click={option.onClick}
+								value={option.value}
+								checked={option.isChecked ? option.isChecked() : false}
+								on:click={() => option.onSelect(option.value)}
 							/>
 						</td>
 						<td>{option.name}</td>
 					</tr>
 				{/each}
-			{:else if Array.isArray(options) && options.length === 1}
-				{@const option = options[0]}
-				<tr>
-					<td>
-						<input
-							type="checkbox"
-							name={option.name}
-							checked={option.isChecked()}
-							on:click={option.onClick}
-						/>
-					</td>
-				</tr>
 			{:else if !Array.isArray(options)}
 				{@const option = options}
 				<tr>
@@ -56,15 +56,16 @@
 						<input
 							type="checkbox"
 							name={option.name}
-							checked={option.isChecked()}
-							on:click={option.onClick}
+							value={option.value}
+							checked={option.isChecked ? option.isChecked() : false}
+							on:click={() => option.onSelect(option.value)}
 						/>
 					</td>
 				</tr>
 			{/if}
 		</table>
 	</td>
-	<td class="info-icon">
+	<td style="width:5%;vertical-align:top;">
 		<input
 			type="image"
 			alt="moreinfo"
@@ -82,32 +83,5 @@
 {/if}
 
 <tr>
-	<td class="spacer" colspan="3" />
+	<td class="settd_spc" colspan="3" />
 </tr>
-
-<style>
-	tr {
-		font-size: 80%;
-	}
-
-	.name {
-		font-weight: bold;
-		vertical-align: top;
-		text-align: left;
-	}
-
-	.options {
-		width: 65%;
-		vertical-align: top;
-	}
-
-	.info-icon {
-		width: 5%;
-		vertical-align: top;
-	}
-
-	.spacer {
-		border-top: 1px dashed #aaaaaa;
-		height: 11px;
-	}
-</style>
