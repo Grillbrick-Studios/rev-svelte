@@ -2,8 +2,13 @@
 	import moreInfo from '$lib/assets/moreinfo.png';
 	import {
 		BibleTextMode,
+		Font,
+		OptionType,
 		bibleTextMode,
 		bibleTextOnly,
+		bibleViewColumns,
+		differentBibleFont,
+		fontFamily,
 		oldEnglishOnFirstVerse,
 		paragraphStyle,
 	} from '$lib/settings';
@@ -146,14 +151,94 @@
 			},
 		]}
 	/>
+	<InfoBox
+		name="Bible View Columns"
+		optionType={OptionType.Dropdown}
+		options={[
+			{
+				name: '1 Column',
+				isChecked: () => $bibleViewColumns === 1,
+				onSelect: () => ($bibleViewColumns = 1),
+			},
+			{
+				name: '2 Columns',
+				isChecked: () => $bibleViewColumns === 2,
+				onSelect: () => ($bibleViewColumns = 2),
+			},
+			{
+				name: '3 Columns',
+				isChecked: () => $bibleViewColumns === 3,
+				onSelect: () => ($bibleViewColumns = 3),
+			},
+			{
+				name: '4 Columns',
+				isChecked: () => $bibleViewColumns === 4,
+				onSelect: () => ($bibleViewColumns = 4),
+			},
+			{
+				name: '5 Columns',
+				isChecked: () => $bibleViewColumns === 5,
+				onSelect: () => ($bibleViewColumns = 5),
+			},
+		]}
+	/>
+	<InfoBox
+		name="Different Bible Font"
+		options={{
+			name: '',
+			onSelect: () => ($differentBibleFont = !$differentBibleFont),
+			isChecked: () => $differentBibleFont,
+		}}
+	/>
+	<InfoBox
+		name="System Font"
+		optionType={OptionType.Dropdown}
+		options={[
+			{
+				name: 'Merriweather',
+				isChecked: () => $fontFamily === Font.Merriweather,
+				onSelect: () => ($fontFamily = Font.Merriweather),
+			},
+			{
+				name: 'Times New Roman',
+				isChecked: () => $fontFamily === Font.TimesNewRoman,
+				onSelect: () => ($fontFamily = Font.TimesNewRoman),
+			},
+			{
+				name: 'Caladea',
+				isChecked: () => $fontFamily === Font.Caladea,
+				onSelect: () => ($fontFamily = Font.Caladea),
+			},
+			{
+				name: 'IBM Plex Serif',
+				isChecked: () => $fontFamily === Font.IBMPlexSerif,
+				onSelect: () => ($fontFamily = Font.IBMPlexSerif),
+			},
+			{
+				name: 'Arial',
+				isChecked: () => $fontFamily === Font.Arial,
+				onSelect: () => ($fontFamily = Font.Arial),
+			},
+			{
+				name: 'Roboto',
+				isChecked: () => $fontFamily === Font.Roboto,
+				onSelect: () => ($fontFamily = Font.Roboto),
+			},
+			{
+				name: 'Montserrat',
+				isChecked: () => $fontFamily === Font.Montserrat,
+				onSelect: () => ($fontFamily = Font.Montserrat),
+			},
+			{
+				name: 'Balsamiq Sans',
+				isChecked: () => $fontFamily === Font.BalsamiqSans,
+				onSelect: () => ($fontFamily = Font.BalsamiqSans),
+			},
+		]}
+	/>
+	<InfoBox
+		name="Line Height"
+		optionType={OptionType.RaiseLowerReset}
+		options={[]}
+	/>
 </table>
-
-<style>
-	p.style1 {
-		text-indent: 0;
-		text-align: left;
-		display: block;
-		width: 100%;
-		font-size: 90%;
-	}
-</style>
