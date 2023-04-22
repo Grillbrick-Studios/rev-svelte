@@ -15,7 +15,7 @@
 	export let options: Option<unknown>[] | Option<unknown> = [];
 	export let multiselect = false;
 	const selectType =
-		multiselect || (Array.isArray(options) && options.length === 1)
+		multiselect || (Array.isArray(options) && options.length > 1)
 			? 'checkbox'
 			: 'radio';
 	let showInfo = false;
