@@ -1,7 +1,7 @@
 <script lang="ts">
-	import blank from '$lib/assets/blank.png';
-	import historyImage from '$lib/assets/history_icon.png';
-	import menuIcon from '$lib/assets/menu_icon.png';
+	import historyImage from '$lib/icons/mnu_history.png';
+	import menuIcon from '$lib/icons/mnu_menu_dot.png';
+	import blank from '$lib/icons/rev_blank.png';
 	import { colorTheme } from '$lib/settings';
 	import SearchBar from './SearchBar.svelte';
 </script>

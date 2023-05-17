@@ -4,6 +4,6 @@ root = true
 end_of_file = lf
 insert_final_newline = false
 
-[*.{ts,svelte}]
+[*.{ts,svelte,css}]
 indent_style = tab
 indent_size = 2
