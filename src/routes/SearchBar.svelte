@@ -1,6 +1,10 @@
 <script lang="ts">
-	import nextIcon from '$lib/assets/next_icon.png';
-	import prevIcon from '$lib/assets/prev_icon.png';
+	import nextIcon from '$lib/images/mnu_next.png';
+	// import nextIconLOD from '$lib/images/mnu_next_LOD.png';
+	// import nextIconSEP from '$lib/images/mnu_next_SEP.png';
+	import prevIcon from '$lib/images/mnu_prev.png';
+	// import prevIconLOD from '$lib/images/mnu_prev_LOD.png';
+	// import prevIconSEP from '$lib/images/mnu_prev_SEP.png';
 	import { colorTheme } from '$lib/settings';
 </script>
 

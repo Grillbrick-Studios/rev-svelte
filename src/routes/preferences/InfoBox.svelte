@@ -1,5 +1,5 @@
 <script lang="ts">
-	import moreInfo from '$lib/assets/moreinfo.png';
+	import moreInfo from '$lib/images/moreinfo.png';
 	import { OptionType } from '$lib/settings';
 
 	type Option<T> = {
