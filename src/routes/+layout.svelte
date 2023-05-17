@@ -7,7 +7,7 @@
 		lineHeight,
 	} from '$lib/settings';
 	import '$lib/styles/fonts.css';
-	import '$lib/styles/style.css';
+	import '$lib/styles/style.scss';
 	import Header from './Header.svelte';
 
 	function setBodyClass(node: HTMLElement) {
@@ -40,6 +40,7 @@
 		style:font-family={$fontFamily}
 		style:font-size="{$fontSize}em"
 		style:line-height="{$lineHeight}em"
+		class={$colorTheme}
 		id="view"
 	>
 		<slot><!-- optional fallback --></slot>

@@ -33,6 +33,7 @@
 		"pg-promise": "^11.4.3",
 		"pusher": "^5.1.2",
 		"pusher-js": "^8.0.2",
-		"replicache": "^12.2.1"
+		"replicache": "^12.2.1",
+		"sass": "^1.62.1"
 	}
 }

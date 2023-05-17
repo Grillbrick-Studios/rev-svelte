@@ -2,11 +2,13 @@
 	import moreInfo from '$lib/assets/moreinfo.png';
 	import {
 		BibleTextMode,
+		ColorTheme,
 		Font,
 		OptionType,
 		bibleTextMode,
 		bibleTextOnly,
 		bibleViewColumns,
+		colorTheme,
 		differentBibleFont,
 		fontFamily,
 		oldEnglishOnFirstVerse,
@@ -240,5 +242,25 @@
 		name="Line Height"
 		optionType={OptionType.RaiseLowerReset}
 		options={[]}
+	/>
+	<InfoBox
+		name="Color Theme"
+		options={[
+			{
+				name: 'Normal',
+				isChecked: () => $colorTheme === ColorTheme.Light,
+				onSelect: () => ($colorTheme = ColorTheme.Light),
+			},
+			{
+				name: 'Sepia',
+				isChecked: () => $colorTheme === ColorTheme.Sepia,
+				onSelect: () => ($colorTheme = ColorTheme.Sepia),
+			},
+			{
+				name: 'Dark',
+				isChecked: () => $colorTheme === ColorTheme.Dark,
+				onSelect: () => ($colorTheme = ColorTheme.Dark),
+			},
+		]}
 	/>
 </table>
